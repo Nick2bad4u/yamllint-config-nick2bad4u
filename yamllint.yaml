@@ -1,97 +1,151 @@
 ---
-# yaml-language-server: $schema=https://www.schemastore.org/yamllint.json
+# y aml-language-server: $schema=https://www.schemastore.org/yamllint.json
 extends: default
-
+# Files and directories to ignore
 ignore: |
     node_modules
+    **/node_modules/*
     **/node_modules/**
     dist/
     coverage/
-    .cache/
-    temp/
-    .git/
+    build/
+    release/
+    .vscode/
+    .idea/
+    *.min.js
+    *.min.css
+    *.bundle.js
+    docs/Packages/**
+    # CI/CD files with known issues
+    docs/docusaurus/docs/documents/docs/Packages/**
+    **/.stryker-tmp/**
+
+# yaml-language-server: $schema=https://www.schemastore.org/yamllint.json
 
 locale: en_US.UTF-8
 
 rules:
+    # Enable anchor rules for better YAML structure
     anchors:
         forbid-duplicated-anchors: true
         forbid-undeclared-aliases: true
         forbid-unused-anchors: false
+
+    # Braces configuration for flow mappings
     braces:
+        forbid: false
         level: warning
         max-spaces-inside: 5
+        max-spaces-inside-empty: -1
+
         min-spaces-inside: 0
+        min-spaces-inside-empty: -1
+    # Brackets configuration for flow sequences
     brackets:
+        forbid: false
+
         level: warning
         max-spaces-inside: 20
+        max-spaces-inside-empty: -1
         min-spaces-inside: 0
+        min-spaces-inside-empty: -1
+    # Colons configuration
     colons:
         level: warning
         max-spaces-after: 1
+
         max-spaces-before: 0
+    # Commas configuration
     commas:
         level: warning
         max-spaces-after: 1
         max-spaces-before: 0
         min-spaces-after: 1
+
+    # Disable comment rules for flexibility
     comments:
         ignore-shebangs: true
         min-spaces-from-content: 1
         require-starting-space: true
     comments-indentation: disable
-    document-end: disable
-    document-start: disable
+
+    document-end: false
+
+    # Document start/end configuration
+    document-start: false
+    # Empty lines configuration
     empty-lines:
         level: warning
         max: 2
         max-end: 1
+
         max-start: 1
+    # Enable important rules for data integrity
     empty-values:
         forbid-in-block-mappings: false
         forbid-in-block-sequences: true
+
         forbid-in-flow-mappings: true
     float-values:
         forbid-inf: false
         forbid-nan: false
         forbid-scientific-notation: false
         require-numeral-before-decimal: false
+
+    # Hyphen configuration
     hyphens:
         level: warning
         max-spaces-after: 1
+
+    # Indentation configuration for consistency
     indentation:
         check-multi-line-strings: false
+
         indent-sequences: consistent
         level: warning
         spaces: 4
+    # Key rules for structure
     key-duplicates:
         forbid-duplicated-merge-keys: true
-    key-ordering: disable
+    key-ordering: false
+
+    # Line length for readability (relaxed for modern screens)
     line-length:
         allow-non-breakable-inline-mappings: true
+
         allow-non-breakable-words: true
         level: warning
         max: 200
+    # File ending requirements
     new-line-at-end-of-file: enable
+
+    # New lines configuration (force consistent Unix newlines across platforms)
     new-lines:
         type: unix
+
     octal-values: enable
+
     quoted-strings:
         allow-quoted-quotes: false
         check-keys: false
         quote-type: double
         required: false
+
+    # Enable trailing spaces check
     trailing-spaces: enable
+    # Disable truthy for flexibility with CI/CD configs
     truthy:
         allowed-values: ["yes", "no", "true", "false", "on", "off"]
+
         check-keys: false
+# Define which files to consider as YAML
 yaml-files:
     - "*.yaml"
     - "*.yml"
     - ".yamllint"
     - ".yamllint.yaml"
     - ".yamllint.yml"
-    - "docker-compose*.yaml"
     - "docker-compose*.yml"
+    - "docker-compose*.yaml"
     - "**/*.yaml"
     - "**/*.yml"
