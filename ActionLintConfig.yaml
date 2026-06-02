@@ -1,0 +1,3 @@
+# ActionLint configuration for yamllint-config-nick2bad4u.
+self-hosted-runner:
+    labels: []
