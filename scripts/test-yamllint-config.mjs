@@ -134,29 +134,7 @@ const ensureYamllint = () => {
     };
 };
 
-/**
- * Resolve the preferred yamllint runner.
- *
- * @returns {{ arguments: string[]; command: string; label: string }}
- */
-const resolveYamllintRunner = () => {
-    const pathVersionResult = runProcess("yamllint", ["--version"]);
-
-    if (pathVersionResult.status === 0) {
-        return {
-            arguments: [],
-            command: "yamllint",
-            label:
-                pathVersionResult.stdout.trim() ||
-                pathVersionResult.stderr.trim() ||
-                "yamllint from PATH",
-        };
-    }
-
-    return ensureYamllint();
-};
-
-const yamllintRunner = resolveYamllintRunner();
+const yamllintRunner = ensureYamllint();
 
 /**
  * Write a fixture into the smoke-test directory.
@@ -185,6 +163,8 @@ const runYamllint = (fixturePath) =>
     runProcess(yamllintRunner.command, [
         ...yamllintRunner.arguments,
         "--strict",
+        "--format",
+        "parsable",
         "-c",
         configPath,
         fixturePath,
