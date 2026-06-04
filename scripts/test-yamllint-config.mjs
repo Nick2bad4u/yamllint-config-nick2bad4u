@@ -96,7 +96,7 @@ const resolvePython = () => {
 /**
  * Ensure the pinned yamllint executable is available in the local cache.
  *
- * @returns {void}
+ * @returns {{ arguments: string[]; command: string; label: string }}
  */
 const ensureYamllint = () => {
     const python = resolvePython();
@@ -116,19 +116,47 @@ const ensureYamllint = () => {
         "--version",
     ]);
 
-    if (versionResult.status === 0) {
-        return;
+    if (versionResult.status !== 0) {
+        runRequiredProcess(virtualEnvironmentPython, [
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--quiet",
+            `yamllint==${yamllintVersion}`,
+        ]);
     }
 
-    runRequiredProcess(virtualEnvironmentPython, [
-        "-m",
-        "pip",
-        "install",
-        "--disable-pip-version-check",
-        "--quiet",
-        `yamllint==${yamllintVersion}`,
-    ]);
+    return {
+        arguments: ["-m", "yamllint"],
+        command: virtualEnvironmentPython,
+        label: `yamllint ${yamllintVersion} from local venv`,
+    };
 };
+
+/**
+ * Resolve the preferred yamllint runner.
+ *
+ * @returns {{ arguments: string[]; command: string; label: string }}
+ */
+const resolveYamllintRunner = () => {
+    const pathVersionResult = runProcess("yamllint", ["--version"]);
+
+    if (pathVersionResult.status === 0) {
+        return {
+            arguments: [],
+            command: "yamllint",
+            label:
+                pathVersionResult.stdout.trim() ||
+                pathVersionResult.stderr.trim() ||
+                "yamllint from PATH",
+        };
+    }
+
+    return ensureYamllint();
+};
+
+const yamllintRunner = resolveYamllintRunner();
 
 /**
  * Write a fixture into the smoke-test directory.
@@ -154,9 +182,8 @@ const writeFixture = (fileName, content) => {
  * @returns {import("node:child_process").SpawnSyncReturns<string>}
  */
 const runYamllint = (fixturePath) =>
-    runProcess(virtualEnvironmentPython, [
-        "-m",
-        "yamllint",
+    runProcess(yamllintRunner.command, [
+        ...yamllintRunner.arguments,
         "--strict",
         "-c",
         configPath,
@@ -220,8 +247,6 @@ const assertInvalidFixture = (fixturePath, expectedRule) => {
  * @returns {void}
  */
 const main = () => {
-    ensureYamllint();
-
     rmSync(fixtureDirectory, { force: true, recursive: true });
     mkdirSync(fixtureDirectory, { recursive: true });
 
@@ -292,7 +317,7 @@ const main = () => {
         rmSync(fixtureDirectory, { force: true, recursive: true });
     }
 
-    console.log(`yamllint ${yamllintVersion} smoke tests passed.`);
+    console.log(`${yamllintRunner.label} smoke tests passed.`);
 };
 
 try {
