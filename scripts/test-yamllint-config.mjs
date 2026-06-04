@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const yamllintVersion = "1.38.0";
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
-const fixtureDirectory = path.join(repoRoot, ".yamllint-smoke");
+const fixtureDirectory = path.join(repoRoot, "yamllint-smoke-fixtures");
 const virtualEnvironmentDirectory = path.join(
     repoRoot,
     ".cache",

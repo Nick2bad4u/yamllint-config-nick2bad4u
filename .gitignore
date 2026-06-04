@@ -3,6 +3,7 @@ dist/
 coverage/
 .cache/
 temp/
+yamllint-smoke-fixtures/
 *.tsbuildinfo
 test-report.junit.xml
 *.tgz

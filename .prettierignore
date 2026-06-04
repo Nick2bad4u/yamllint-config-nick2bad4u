@@ -10,6 +10,7 @@ coverage/
 *.min.js
 *.min.css
 dist/
+yamllint-smoke-fixtures/
 docs/docusaurus/docs/
 docs/docusaurus/build/
 docs/docusaurus/.docusaurus/
