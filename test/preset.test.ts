@@ -36,17 +36,20 @@ function parseConfig(source: string): Record<string, unknown> {
 
 describe("yamllint-config-nick2bad4u", () => {
     it("exports the packaged yamllint config path", async () => {
-        expect.assertions(7);
+        expect.assertions(9);
 
         const config = await readFile(configPath, "utf8");
+        const parsedConfig = parseConfig(config);
+        const rules = asRecord(parsedConfig["rules"]);
+        const truthy = asRecord(rules["truthy"]);
 
         expect(packageName).toBe("yamllint-config-nick2bad4u");
         expect(path.isAbsolute(configPath)).toBe(true);
         expect(configPath.endsWith(".yamllint")).toBe(true);
         expect(configPath).not.toContain("package.json");
-        expect(config).toContain("extends: default");
-        expect(config).toContain("line-length:");
-        expect(config).toContain('allowed-values: ["true", "false"]');
+        expect(parsedConfig["extends"]).toBe("default");
+        expect(rules).toHaveProperty("line-length");
+        expect(truthy["allowed-values"]).toStrictEqual(["true", "false"]);
     });
 
     it("resolves the config path from built module locations", () => {
