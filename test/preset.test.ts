@@ -48,7 +48,7 @@ describe("yamllint-config-nick2bad4u", () => {
         expect(configPath.endsWith(".yamllint")).toBe(true);
         expect(configPath).not.toContain("package.json");
         expect(parsedConfig["extends"]).toBe("default");
-        expect(rules).toHaveProperty("line-length");
+        expect(rules["line-length"]).toBe("disable");
         expect(truthy["allowed-values"]).toStrictEqual(["true", "false"]);
     });
 
@@ -63,7 +63,7 @@ describe("yamllint-config-nick2bad4u", () => {
     });
 
     it("keeps packaged config files equivalent and parseable", async () => {
-        expect.assertions(15);
+        expect.assertions(16);
 
         const [dotfileConfig, yamlConfig] = await Promise.all([
             readFile(dotfileConfigPath, "utf8"),
@@ -94,6 +94,7 @@ describe("yamllint-config-nick2bad4u", () => {
         expect(parsedConfig["ignore"]).toContain("node_modules");
         expect(parsedConfig["ignore"]).toContain("dist/");
         expect(parsedConfig["ignore"]).not.toContain("docs/Packages");
+        expect(rules["line-length"]).toBe("disable");
         expect(indentation["level"]).toBe("error");
         expect(indentation["spaces"]).toBe(4);
         expect(truthy["allowed-values"]).toStrictEqual(["true", "false"]);
