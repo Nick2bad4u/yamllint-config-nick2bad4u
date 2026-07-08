@@ -7,3 +7,5 @@ yamllint-smoke-fixtures/
 *.tsbuildinfo
 test-report.junit.xml
 *.tgz
+.lychee.report.md
+.lycheecache
