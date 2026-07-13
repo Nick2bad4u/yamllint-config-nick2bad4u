@@ -774,6 +774,8 @@ dist/
 dist-*/
 node_modules/
 coverage/
+reports/
+docs/api/
 .cache/
 
 # Binary and media files
